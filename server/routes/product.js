@@ -6,6 +6,7 @@ const { auth } = require("../middleware/auth");
 const multer = require('multer');
 const {Product} = require('../models/Product');
 
+
 //=================================
 //             Product
 //=================================
@@ -48,7 +49,7 @@ router.post('/', (req,res) => {
 
 router.post('/products', (req,res) => {
 
-  product.find()
+  Product.find()
   .populate("writer")
   .exec((err,productInfo) => {
     if(err) return res.status(400).json({success:false,err})

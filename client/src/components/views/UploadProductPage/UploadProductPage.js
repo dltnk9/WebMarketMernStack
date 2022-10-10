@@ -52,16 +52,16 @@ setImages(newImages)
 
 const submitHandler = (event) => {
   event.preventDefault();
-  if(!Title || !Description || !Price || !Continent || !Images){
+  if(!Title || !Description || !Price || !Continent || !Images === 0){
     return alert("all the values must be filled")
   }
   const body = {
-    writier: props.user.userData._id,
+    writer: props.user.userData._id,
     title:Title,
     description:Description,
     price:Price,
     images:Images,
-    continent:Continents
+    continents:Continent
   }
 
   Axios.post("/api/product", body)
