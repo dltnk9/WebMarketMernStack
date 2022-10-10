@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { Typography,Button,Form,Input } from 'antd'
 import FileUpload from '../../utils/FileUpload';
+import Axios from 'axios';
+import {Router} from 'react-router-dom'
 
 const {Title} = Typography;
 const {TextArea} = Input;
@@ -16,7 +18,7 @@ const Continents =[
   
 ]
 
-function UploadProductPage() {
+function UploadProductPage(props) {
 
   const [Title, setTitle] = useState("")
   const [Description, setDescription] = useState("")
@@ -44,6 +46,35 @@ const continentChangeHandler = (event) => {
 setContinent(event.currentTarget.value)
 }
 
+const updateImages = (newImages) => {
+setImages(newImages)
+}
+
+const submitHandler = (event) => {
+  event.preventDefault();
+  if(!Title || !Description || !Price || !Continent || !Images){
+    return alert("all the values must be filled")
+  }
+  const body = {
+    writier: props.user.userData._id,
+    title:Title,
+    description:Description,
+    price:Price,
+    images:Images,
+    continent:Continents
+  }
+
+  Axios.post("/api/product", body)
+  .then(response=>{
+    if(response.data.success) {
+      alert("successfully uploaded")
+      props.history.push('/')
+    }else {
+      alert("fail to upload")
+    }
+  })
+}
+
   return (
     <div style={{maxWidth:'700px', margin:'2rem auto'}}>
 <div style={{textAlign:'center', marginBottom:'2rem'}}> 
@@ -52,8 +83,8 @@ setContinent(event.currentTarget.value)
 
 </div>
 
-<Form>
-<FileUpload></FileUpload>
+<Form onSubmitCapture={submitHandler}>
+<FileUpload refreshFunction={updateImages}></FileUpload>
   <br/>
   <br/>
   <label>Name</label>
@@ -77,7 +108,7 @@ setContinent(event.currentTarget.value)
   </select>
   <br/>
   <br/>
-  <Button>
+  <Button htmlType="submit">
     Confirm
   </Button>
 </Form>
